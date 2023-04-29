@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import Layout from "./Components/Layout";
+import PersistLogin from "./Components/PersistLogin";
+import RequireAuth from "./Components/RequireAuth";
+import Dashboard from "./Pages/Dashboard";
+import NotFound from "./Pages/NotFound";
+import Unauthorized from "./Pages/Unauthorized";
+import RegisterPage from "./Pages/RegisterPage";
+import LoginPage from "./Pages/LoginPage";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/" element={<Layout />}>
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={["User"]} />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Route>
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
