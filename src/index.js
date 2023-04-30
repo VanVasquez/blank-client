@@ -4,6 +4,7 @@ import App from "./App";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./Context/AuthProvider";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
+
 if (process.env.NODE_ENV === "production") disableReactDevTools();
 
 const container = document.getElementById("root");
