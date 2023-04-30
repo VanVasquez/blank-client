@@ -1,17 +1,6 @@
-import {
-  Button,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  TextField,
-} from "@mui/material";
-import { Container } from "@mui/system";
 import React, { useState, useEffect } from "react";
 import useAuth from "../Hooks/useAuth";
 import useAxiosPrivate from "../Hooks/useAxiosPrivate";
-import theme from "../Theme";
 
 const TodoList = () => {
   const { auth } = useAuth();
@@ -41,7 +30,8 @@ const TodoList = () => {
 
   const handleNewTodoChange = (event) => setNewTodo(event.target.value);
 
-  const handleAddTodo = async () => {
+  const handleAddTodo = async (e) => {
+    e.preventDefault();
     try {
       if (newTodo.trim() !== "") {
         const response = await instance.post("/todo/add", {
@@ -73,42 +63,31 @@ const TodoList = () => {
 
   console.log(todos);
   return (
-    <Container maxWidth="xs">
-      <Paper
-        style={{
-          marginTop: theme.spacing(3),
-          padding: theme.spacing(0, 2),
-        }}
-      >
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <TextField
-              label="New Todo"
-              value={newTodo}
-              onChange={handleNewTodoChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={handleAddTodo}>
-              Add Todo
-            </Button>
-          </Grid>
-          <Grid item>
-            <List>
-              {todos?.map((todo, index) => (
-                <ListItem key={todo._id}>
-                  <ListItemText primary={todo.todo} />
-                  <Button onClick={() => handleDeleteTodo(index, todo._id)}>
-                    Delete
-                  </Button>
-                </ListItem>
-              ))}
-            </List>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+    <div>
+      <form onSubmit={handleAddTodo}>
+        <label>
+          Add todo:
+          <input type="text" value={newTodo} onChange={handleNewTodoChange} />
+        </label>
+        <button type="submit">Add Todo</button>
+      </form>{" "}
+      <ul>
+        {loading ? (
+          <p>Loading todos...</p>
+        ) : todos?.length === 0 ? (
+          <p>No todos yet</p>
+        ) : (
+          todos?.map((todo, index) => (
+            <li key={todo._id}>
+              {todo.todo}
+              <button onClick={() => handleDeleteTodo(index, todo._id)}>
+                Delete
+              </button>
+            </li>
+          ))
+        )}
+      </ul>
+    </div>
   );
 };
 
